@@ -23,3 +23,11 @@ class MessageQueue(object):
             This operation is thread-safe.
         """
         self.queue.put(message)
+
+    def __str__(self):
+        """ Create a string representation of the queue.
+        """
+        string = "MessageQueue[Head - "
+        for message in self.queue.queue:
+            string += str(message)+" - "
+        return string+"Tail]"
