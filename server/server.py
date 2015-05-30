@@ -40,6 +40,14 @@ class MessageHandler(BaseHTTPRequestHandler):
         return self.response(1, "Error, message not in the queue.")
 
 def run(queue, port=4242, server_class=HTTPServer, handler_class=MessageHandler):
+    """ Create an http server using parameters given and make it serve forever.
+
+    Keyword Arguments:
+        queue         - An instance of a queue to use to hold messages.
+        port          - The port that the server has to listen.
+        server_class  - The class to use for the server instanciation.
+        handler_class - The handler that the server has to use.
+    """
     global message_queue
     message_queue = queue
     server_address = ('', port)
