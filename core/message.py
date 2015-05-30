@@ -28,6 +28,13 @@ class Message(object):
         return "("+self.sender+":"+self.contents+")"
 
 def create_message_from_dict(dictionnary):
+    """ Create a Message object from a dictionnary given in parameters.
+        Typically, this dictionnary comes from a JSON.
+
+    Keyword Arguments:
+        dictionnary - A dictionnary that holds at least 'contents',
+                      'sender' and 'ttl' keys.
+    """
     copied_dict = copy.copy(dictionnary)
     contents = copied_dict['contents']
     sender = copied_dict['sender']
