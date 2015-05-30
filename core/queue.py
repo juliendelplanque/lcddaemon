@@ -23,6 +23,8 @@ class MessageQueue(object):
             This operation is thread-safe.
         """
         self.queue.put(message)
+        message.set_added_date_now()
+        print("Message added in the queue - "+str(message.added_date))
 
     def __str__(self):
         """ Create a string representation of the queue.
