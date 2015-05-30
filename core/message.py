@@ -25,7 +25,7 @@ class Message(object):
     def __str__(self):
         """ Return a string representation of the message.
         """
-        return "("+self.sender+":"+self.contents+")"
+        return "("+self.sender+":"+self.contents+"|"+str(self.ttl)+"s)"
 
 def create_message_from_dict(dictionnary):
     """ Create a Message object from a dictionnary given in parameters.
