@@ -23,7 +23,6 @@ class MessageHandler(BaseHTTPRequestHandler):
         m = create_message_from_dict(message_dict)
         print("Message created: "+str(m))
         message_queue.put(m)
-        print("Message is now in the queue.")
         print(str(message_queue))
         self.send_response(200)
         self.send_header("Content-type", "text/json")
