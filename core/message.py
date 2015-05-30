@@ -37,6 +37,9 @@ class Message(object):
     def set_added_date_now(self):
         self.added_date = datetime.now()
 
+    def is_outdated(self):
+        return datetime.now() > self.added_date + datetime.timedelta(seconds=self.ttl)
+
 def create_message_from_dict(dictionnary):
     """ Create a Message object from a dictionnary given in parameters.
         Typically, this dictionnary comes from a JSON.
