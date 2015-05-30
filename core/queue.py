@@ -23,8 +23,10 @@ class MessageQueue(object):
         """ Pop the first message from the queue.
             This operation is thread-safe.
         """
-        # ToDo: management of ttl.
-        return self.queue.get()
+        m = self.queue.get()
+        while m.is_outdated():
+            m = self.queue.get()
+        return m
 
     def put(self, message):
         """ Put a message at the end of the queue.
