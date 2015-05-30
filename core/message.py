@@ -6,6 +6,8 @@
 import copy
 from datetime import datetime
 
+from core.exceptions import ParametersException
+
 class Message(object):
     """ This object is a message to display on a LCD screen.
     """
@@ -44,11 +46,23 @@ def create_message_from_dict(dictionnary):
     """
     copied_dict = copy.copy(dictionnary)
     contents = copied_dict['contents']
+    if type(contents) != str:
+        raise ParametersException("\"contents\" is not a string.")
     sender = copied_dict['sender']
+    if type(sender) != str:
+        raise ParametersException("\"sender\" is not a string.")
     ttl = copied_dict['ttl']
+    if type(ttl) != int:
+        raise ParametersException("\"ttl\" is not an integer.")
+    elif ttl <= 0:
+        raise ParametersException("\"ttl\" must be > 0.")
     repeat = 1
     if 'repeat' in copied_dict:
         repeat = copied_dict['repeat']
+        if type(repeat) != int:
+            raise ParametersException("\"repeat\" is not an integer.")
+        elif repeat <= 0:
+            raise ParametersException("\"repeat\" must be > 0.")
         del(copied_dict['repeat'])
     del(copied_dict['contents'])
     del(copied_dict['sender'])
