@@ -4,6 +4,7 @@
 """
 
 import copy
+from datetime import datetime
 
 class Message(object):
     """ This object is a message to display on a LCD screen.
@@ -26,6 +27,9 @@ class Message(object):
         """ Return a string representation of the message.
         """
         return "("+self.sender+":"+self.contents+"|"+str(self.ttl)+"s)"
+
+    def set_added_date_now(self):
+        self.added_date = datetime.now()
 
 def create_message_from_dict(dictionnary):
     """ Create a Message object from a dictionnary given in parameters.
