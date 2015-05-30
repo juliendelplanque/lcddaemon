@@ -2,8 +2,8 @@
 """ This script defines exceptions that can be raised by the applications.
 """
 
-BAD_PARAMETER_TYPE  = 1
-BAD_PARAMETER_VALUE = 2
+BAD_PARAMETER_TYPE  = 101
+BAD_PARAMETER_VALUE = 102
 
 class ParametersException(Exception):
     """ This exception is raised when a parameter has a bade type or a bad
