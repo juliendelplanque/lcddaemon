@@ -9,18 +9,21 @@ from datetime import datetime
 class Message(object):
     """ This object is a message to display on a LCD screen.
     """
-    def __init__(self, contents, sender, ttl, other_params):
+    def __init__(self, contents, sender, ttl, repeat, other_params):
         """ Constructor for a Message object.
 
         Keyword Arguments:
             contents     - A string that will be displayed on the LCD screen.
             sender       - The name of the message's sender.
             ttl          - The time to live of the message.
+            repeat       - The number of time the message has to be re-put in
+                           the queue.
             other_params - Misc parameters.
         """
         self.contents = contents
         self.sender = sender
         self.ttl = ttl
+        self.repeat = repeat
         self.other_params = other_params
 
     def __str__(self):
@@ -43,8 +46,12 @@ def create_message_from_dict(dictionnary):
     contents = copied_dict['contents']
     sender = copied_dict['sender']
     ttl = copied_dict['ttl']
+    repeat = 1
+    if 'repeat' in copied_dict:
+        repeat = copied_dict['repeat']
+        del(copied_dict['repeat'])
     del(copied_dict['contents'])
     del(copied_dict['sender'])
     del(copied_dict['ttl'])
-    return Message(contents=contents, sender=sender,
-                    ttl=ttl, other_params=copied_dict)
+    return Message(contents=contents, sender=sender, ttl=ttl,
+                    repeat=repeat, other_params=copied_dict)
