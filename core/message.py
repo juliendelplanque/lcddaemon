@@ -8,20 +8,32 @@ import copy
 class Message(object):
     """ This object is a message to display on a LCD screen.
     """
-    def __init__(self, content, sender, **kwargs):
-        self.content = content
+    def __init__(self, contents, sender, ttl, other_params):
+        """ Constructor for a Message object.
+
+        Keyword Arguments:
+            contents     - A string that will be displayed on the LCD screen.
+            sender       - The name of the message's sender.
+            ttl          - The time to live of the message.
+            other_params - Misc parameters.
+        """
+        self.contents = contents
         self.sender = sender
-        self.other_params = kwargs
+        self.ttl = ttl
+        self.other_params = other_params
 
     def __str__(self):
         """ Return a string representation of the message.
         """
-        return "("+self.sender+":"+self.content+")"
+        return "("+self.sender+":"+self.contents+")"
 
 def create_message_from_dict(dictionnary):
     copied_dict = copy.copy(dictionnary)
-    content = copied_dict['content']
+    contents = copied_dict['contents']
     sender = copied_dict['sender']
-    del(copied_dict['content'])
+    ttl = copied_dict['ttl']
+    del(copied_dict['contents'])
     del(copied_dict['sender'])
-    return Message(content=content, sender=sender, kwargs=copied_dict)
+    del(copied_dict['ttl'])
+    return Message(contents=contents, sender=sender,
+                    ttl=ttl, other_params=copied_dict)
