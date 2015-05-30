@@ -39,9 +39,9 @@ class MessageHandler(BaseHTTPRequestHandler):
     def error_response(self):
         return self.response(1, "Error, message not in the queue.")
 
-def run(queue, server_class=HTTPServer, handler_class=MessageHandler):
+def run(queue, port=4242, server_class=HTTPServer, handler_class=MessageHandler):
     global message_queue
     message_queue = queue
-    server_address = ('', 8000)
+    server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     httpd.serve_forever()
