@@ -8,6 +8,7 @@ from http.server import BaseHTTPRequestHandler
 from http.server import HTTPServer
 
 from core.message import *
+from core.exceptions import LCDException
 
 message_queue = None
 
@@ -29,7 +30,7 @@ class MessageHandler(BaseHTTPRequestHandler):
             self.send_header("Content-type", "text/json")
             self.end_headers()
             self.wfile.write(bytes(self.ok_response(), 'UTF-8'))
-        except ParametersException as paramsException:
+        except LCDException as paramsException:
             self.send_response(200)
             self.send_header("Content-type", "text/json")
             self.end_headers()
