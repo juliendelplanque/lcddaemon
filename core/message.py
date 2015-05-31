@@ -10,6 +10,7 @@ import core.exceptions as exceptions # for error codes constants
 from core.exceptions import ParametersException
 
 DEFAULT_REPEAT = 1
+DEFAULT_TTL    = 60
 
 def set_default_repeat(numberOfRepetition):
     """ Set the default number of repetition of a message.
@@ -18,10 +19,28 @@ def set_default_repeat(numberOfRepetition):
         numberOfRepetition - The default number of repetition of a message.
     """
     global DEFAULT_REPEAT
-    if DEFAULT_REPEAT <= 0:
-        raise ParametersException("'ttl' must be > 0.",
+    if type(numberOfRepetition) != int:
+        raise ParametersException("'repeat' is not an integer.",
+                                    exceptions.BAD_PARAMETER_TYPE)
+    if numberOfRepetition <= 0:
+        raise ParametersException("'repeat' must be > 0.",
                                     exceptions.BAD_PARAMETER_VALUE)
     DEFAULT_REPEAT = numberOfRepetition
+
+def set_default_ttl(newTtl):
+    """ Set the default ttl of a message.
+
+    Keyword Arguments:
+        newTtl - The default ttl of a message.
+    """
+    global DEFAULT_TTL
+    if type(ttl) != int:
+        raise ParametersException("'ttl' is not an integer.",
+                                    exceptions.BAD_PARAMETER_TYPE)
+    if newTtl <= 0:
+        raise ParametersException("'ttl' must be > 0.",
+                                    exceptions.BAD_PARAMETER_VALUE)
+    DEFAULT_TTL = newTtl
 
 class Message(object):
     """ This object is a message to display on a LCD screen.
