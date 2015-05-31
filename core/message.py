@@ -34,7 +34,7 @@ def set_default_ttl(newTtl):
         newTtl - The default ttl of a message.
     """
     global DEFAULT_TTL
-    if type(ttl) != int:
+    if type(newTtl) != int:
         raise ParametersException("'ttl' is not an integer.",
                                     exceptions.BAD_PARAMETER_TYPE)
     if newTtl <= 0:
@@ -90,25 +90,27 @@ def create_message_from_dict(dictionnary):
     if type(sender) != str:
         raise ParametersException("'sender' is not a string.",
                                     exceptions.BAD_PARAMETER_TYPE)
-    ttl = copied_dict['ttl']
-    if type(ttl) != int:
-        raise ParametersException("'ttl' is not an integer.",
-                                    exceptions.BAD_PARAMETER_TYPE)
-    elif ttl <= 0:
-        raise ParametersException("'ttl' must be > 0.",
-                                    exceptions.BAD_PARAMETER_VALUE)
+    ttl = DEFAULT_TTL
+    if 'ttl' in copied_dict:
+        ttl = copied_dict['ttl']
+        if type(ttl) != int:
+            raise ParametersException("'ttl' is not an integer.",
+                                        exceptions.BAD_PARAMETER_TYPE)
+        if ttl <= 0:
+            raise ParametersException("'ttl' must be > 0.",
+                                        exceptions.BAD_PARAMETER_VALUE)
+        del(copied_dict['ttl'])
     repeat = DEFAULT_REPEAT
     if 'repeat' in copied_dict:
         repeat = copied_dict['repeat']
         if type(repeat) != int:
             raise ParametersException("'repeat' is not an integer.",
                                     exceptions.BAD_PARAMETER_TYPE)
-        elif repeat <= 0:
+        if repeat <= 0:
             raise ParametersException("'repeat' must be > 0.",
                                     exceptions.BAD_PARAMETER_VALUE)
         del(copied_dict['repeat'])
     del(copied_dict['contents'])
     del(copied_dict['sender'])
-    del(copied_dict['ttl'])
     return Message(contents=contents, sender=sender, ttl=ttl,
                     repeat=repeat, other_params=copied_dict)
