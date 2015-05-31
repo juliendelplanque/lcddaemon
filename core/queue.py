@@ -26,10 +26,11 @@ class MessageQueue(object):
         """
         m = self.queue.get()
         while m.is_outdated():
-            m = self.queue.get()
             users[m.sender] -= 1
+            m = self.queue.get()
+        users[m.sender] -= 1
         if m.repeat > 1:
-            m.repeat = m.repeat - 1
+            m.repeat -= 1
             self.put(m)
         return m
 
