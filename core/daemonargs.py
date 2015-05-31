@@ -8,18 +8,18 @@ import json
 from argparse import ArgumentParser
 
 
-def get_args_parser_conf(args_conf_filename="core/args-en.conf"):
-    args_conf = {}
-    with open(args_conf_filename, "r") as args_conf_file:
-        config_content = args_conf_file.read()
+def read_json_file(json_filename="core/args-en.conf"):
+    result = {}
+    with open(json_filename, "r") as json_file:
+        str_json = json_file.read()
 
-        args_conf = json.loads(config_content)
+        result = json.loads(str_json)
 
-    return args_conf
+    return result
 
 
 def parse_arguments():
-    args_conf = get_args_parser_conf()
+    args_conf = read_json_file()
 
     parser = ArgumentParser(**args_conf[0])
 
@@ -38,4 +38,12 @@ def parse_arguments():
             raise TypeError("Config parser can not hold more than 2 names.")
 
     parsed = parser.parse_args()
-    return vars(parsed)
+    config = vars(parsed)
+
+    # If user specify customized configuration file, then update config values
+    user_file = config.pop("conf")
+    if user_file:
+        user_defined = read_json_file(user_file)
+        config.update(user_defined)
+
+    return config
