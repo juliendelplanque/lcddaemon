@@ -1,18 +1,19 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """ This script defines the queue object used to hold
     messages to be displayed by a LCD screen.
 """
 
 from queue import Queue
 
-import core.exceptions as exceptions # for error codes constants
+import core.exceptions as exceptions  # for error codes constants
 from core.exceptions import UserException
+
 
 class MessageQueue(object):
     """ This object hold messages that will be displayed
         on a LCD screen.
     """
-    def __init__(self, limit_per_user=10):
+    def __init__(self, limit_per_user):
         self.limit_per_user = limit_per_user
         self.queue = Queue()
         # This dictionnary's keys will be usernames and its values will be the

@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """ This script defines the server object that is used to
     handle clients' messages.
 """
@@ -11,6 +11,7 @@ from core.message import *
 from core.exceptions import LCDException
 
 message_queue = None
+
 
 class MessageHandler(BaseHTTPRequestHandler):
     """ This object is the handler for messages.
@@ -42,7 +43,7 @@ class MessageHandler(BaseHTTPRequestHandler):
     def ok_response(self):
         return self.response(0, "Message put in the queue.")
 
-def run(queue, port=4242, server_class=HTTPServer, handler_class=MessageHandler):
+def run(queue, port, server_class=HTTPServer, handler_class=MessageHandler):
     """ Create an http server using parameters given and make it serve forever.
 
     Keyword Arguments:
