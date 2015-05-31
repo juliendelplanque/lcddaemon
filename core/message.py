@@ -9,6 +9,20 @@ from datetime import datetime
 import core.exceptions as exceptions # for error codes constants
 from core.exceptions import ParametersException
 
+DEFAULT_REPEAT = 1
+
+def set_default_repeat(numberOfRepetition):
+    """ Set the default number of repetition of a message.
+
+    Keyword Arguments:
+        numberOfRepetition - The default number of repetition of a message.
+    """
+    global DEFAULT_REPEAT
+    if DEFAULT_REPEAT <= 0:
+        raise ParametersException("'ttl' must be > 0.",
+                                    exceptions.BAD_PARAMETER_VALUE)
+    DEFAULT_REPEAT = numberOfRepetition
+
 class Message(object):
     """ This object is a message to display on a LCD screen.
     """
@@ -64,7 +78,7 @@ def create_message_from_dict(dictionnary):
     elif ttl <= 0:
         raise ParametersException("'ttl' must be > 0.",
                                     exceptions.BAD_PARAMETER_VALUE)
-    repeat = 1
+    repeat = DEFAULT_REPEAT
     if 'repeat' in copied_dict:
         repeat = copied_dict['repeat']
         if type(repeat) != int:
