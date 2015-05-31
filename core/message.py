@@ -9,8 +9,9 @@ from datetime import datetime
 import core.exceptions as exceptions # for error codes constants
 from core.exceptions import ParametersException
 
-DEFAULT_REPEAT = None
-DEFAULT_TTL    = None
+DEFAULT_REPEAT   = None
+DEFAULT_TTL      = None
+DEFAULT_DURATION = None
 
 def set_default_repeat(numberOfRepetition):
     """ Set the default number of repetition of a message.
@@ -41,6 +42,21 @@ def set_default_ttl(newTtl):
         raise ParametersException("'ttl' must be > 0.",
                                     exceptions.BAD_PARAMETER_VALUE)
     DEFAULT_TTL = newTtl
+
+def set_default_duration(newDuration):
+    """ Set the default duration of a message.
+
+    Keyword Arguments:
+        newDuration - The default duration of a message.
+    """
+    global DEFAULT_DURATION
+    if type(newDuration) != int:
+        raise ParametersException("'duration' is not an integer.",
+                                    exceptions.BAD_PARAMETER_TYPE)
+    if newDuration <= 0:
+        raise ParametersException("'duration' must be > 0.",
+                                    exceptions.BAD_PARAMETER_VALUE)
+    DEFAULT_DURATION = newDuration
 
 class Message(object):
     """ This object is a message to display on a LCD screen.
@@ -113,7 +129,17 @@ def create_message_from_dict(dictionnary):
             raise ParametersException("'repeat' must be > 0.",
                                     exceptions.BAD_PARAMETER_VALUE)
         del(copied_dict['repeat'])
+    duration = DEFAULT_DURATION
+    if 'duration' in copied_dict:
+        duration = copied_dict['duration']
+        if type(duration) != int:
+            raise ParametersException("'duration' is not an integer.",
+                                    exceptions.BAD_PARAMETER_TYPE)
+        if duration <= 0:
+            raise ParametersException("'duration' must be > 0.",
+                                    exceptions.BAD_PARAMETER_VALUE)
+        del(copied_dict['duration'])
     del(copied_dict['contents'])
     del(copied_dict['sender'])
     return Message(contents=contents, sender=sender, ttl=ttl,
-                    repeat=repeat, other_params=copied_dict)
+                    repeat=repeat, duration=duration, other_params=copied_dict)
