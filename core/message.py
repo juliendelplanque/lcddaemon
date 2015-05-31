@@ -13,6 +13,21 @@ DEFAULT_REPEAT   = None
 DEFAULT_TTL      = None
 DEFAULT_DURATION = None
 
+def verify_new_int_global(varToVerify, name):
+    """ Verify that varToVerify is an integer > 0.
+        If it is not, raise an ParametersException.
+
+    Keyword Arguments:
+        varToVerify - The variable to verify.
+        name        - The name to put in the exception message.
+    """
+    if type(varToVerify) != int:
+        raise ParametersException("'"+name+"' is not an integer.",
+                                    exceptions.BAD_PARAMETER_TYPE)
+    if varToVerify <= 0:
+        raise ParametersException("'"+name+"' must be > 0.",
+                                    exceptions.BAD_PARAMETER_VALUE)
+
 def set_default_repeat(numberOfRepetition):
     """ Set the default number of repetition of a message.
 
@@ -20,12 +35,7 @@ def set_default_repeat(numberOfRepetition):
         numberOfRepetition - The default number of repetition of a message.
     """
     global DEFAULT_REPEAT
-    if type(numberOfRepetition) != int:
-        raise ParametersException("'repeat' is not an integer.",
-                                    exceptions.BAD_PARAMETER_TYPE)
-    if numberOfRepetition <= 0:
-        raise ParametersException("'repeat' must be > 0.",
-                                    exceptions.BAD_PARAMETER_VALUE)
+    verify_new_int_global(numberOfRepetition, 'repeat')
     DEFAULT_REPEAT = numberOfRepetition
 
 def set_default_ttl(newTtl):
@@ -35,12 +45,7 @@ def set_default_ttl(newTtl):
         newTtl - The default ttl of a message.
     """
     global DEFAULT_TTL
-    if type(newTtl) != int:
-        raise ParametersException("'ttl' is not an integer.",
-                                    exceptions.BAD_PARAMETER_TYPE)
-    if newTtl <= 0:
-        raise ParametersException("'ttl' must be > 0.",
-                                    exceptions.BAD_PARAMETER_VALUE)
+    verify_new_int_global(newTtl, 'ttl')
     DEFAULT_TTL = newTtl
 
 def set_default_duration(newDuration):
@@ -50,12 +55,7 @@ def set_default_duration(newDuration):
         newDuration - The default duration of a message.
     """
     global DEFAULT_DURATION
-    if type(newDuration) != int:
-        raise ParametersException("'duration' is not an integer.",
-                                    exceptions.BAD_PARAMETER_TYPE)
-    if newDuration <= 0:
-        raise ParametersException("'duration' must be > 0.",
-                                    exceptions.BAD_PARAMETER_VALUE)
+    verify_new_int_global(newDuration, 'duration')
     DEFAULT_DURATION = newDuration
 
 class Message(object):
