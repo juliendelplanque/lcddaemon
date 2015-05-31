@@ -9,8 +9,8 @@ from datetime import datetime
 import core.exceptions as exceptions # for error codes constants
 from core.exceptions import ParametersException
 
-DEFAULT_REPEAT = 1
-DEFAULT_TTL    = 60
+DEFAULT_REPEAT = None
+DEFAULT_TTL    = None
 
 def set_default_repeat(numberOfRepetition):
     """ Set the default number of repetition of a message.
