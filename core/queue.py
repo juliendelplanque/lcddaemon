@@ -43,10 +43,10 @@ class MessageQueue(object):
                                 exceptions.TOO_MUCH_MESSAGES)
         self.queue.put(message)
         message.set_added_date_now()
-        if message.sender in self.users:
-            self.users[message.sender] += 1
-        else:
+        if message.sender not in self.users:
             self.users[message.sender] = 0
+
+        self.users[message.sender] += 1
         print("Message added in the queue - "+str(message.added_date))
 
     def user_reached_limit(self, username):
@@ -54,7 +54,7 @@ class MessageQueue(object):
             messages limit or not.
         """
         if username in self.users:
-            return self.users[username] + 1 >= self.limit_per_user
+            return self.users[username] >= self.limit_per_user
         else:
             return False
 
