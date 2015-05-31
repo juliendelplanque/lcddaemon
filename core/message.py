@@ -45,7 +45,7 @@ def set_default_ttl(newTtl):
 class Message(object):
     """ This object is a message to display on a LCD screen.
     """
-    def __init__(self, contents, sender, ttl, repeat, other_params):
+    def __init__(self, contents, sender, ttl, repeat, duration, other_params):
         """ Constructor for a Message object.
 
         Keyword Arguments:
@@ -54,12 +54,15 @@ class Message(object):
             ttl          - The time to live of the message.
             repeat       - The number of time the message has to be re-put in
                            the queue.
+            duration     - The time that the message has to be display on the
+                           screen.
             other_params - Misc parameters.
         """
         self.contents = contents
         self.sender = sender
         self.ttl = ttl
         self.repeat = repeat
+        self.duration = duration
         self.other_params = other_params
 
     def __str__(self):
