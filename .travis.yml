@@ -1,0 +1,12 @@
+language: python
+
+python:
+    - "3.3"
+    - "3.4"
+
+script: "python ./unittests.py"
+
+notifications:
+  email:
+    - julien.delplanque@live.be
+    - adevaux42@gmail.com
