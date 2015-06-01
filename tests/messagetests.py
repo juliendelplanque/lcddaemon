@@ -3,6 +3,7 @@
 """
 
 import unittest
+from datetime import datetime
 
 import core.message as msg
 from core.exceptions import ParametersException
@@ -43,3 +44,11 @@ class MessageTest(unittest.TestCase):
         # Now test with a good value.
         msg.set_default_duration(10)
         self.assertEquals(msg.DEFAULT_DURATION, 10)
+
+    def test_is_outdated(self):
+        message = msg.Message("Some contents", "My app", 5, 1, 5, {})
+        message.added_date = datetime(1970,1,1)
+        self.assertTrue(message.is_outdated())
+
+        message.added_date = datetime.now()
+        self.assertFalse(message.is_outdated())
