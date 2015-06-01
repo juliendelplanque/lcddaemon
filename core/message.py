@@ -5,6 +5,7 @@
 
 import copy
 from datetime import datetime
+from datetime import timedelta
 
 import core.exceptions as exceptions # for error codes constants
 from core.exceptions import ParametersException
@@ -90,7 +91,7 @@ class Message(object):
         self.added_date = datetime.now()
 
     def is_outdated(self):
-        return datetime.now() > self.added_date + datetime.timedelta(seconds=self.ttl)
+        return datetime.now() > self.added_date + timedelta(seconds=self.ttl)
 
 def create_message_from_dict(dictionnary):
     """ Create a Message object from a dictionnary given in parameters.
