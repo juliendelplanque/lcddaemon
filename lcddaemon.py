@@ -3,6 +3,8 @@
 """ This script is the launcher of the daemon.
 """
 
+import sys
+
 from core.daemonargs import parse_arguments
 from core.message import set_default_repeat
 from core.message import set_default_ttl
@@ -18,4 +20,8 @@ def main():
     run(MessageQueue(config["limit"]), config["ptl"])
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("You killed me.")
+        sys.exit(0)
