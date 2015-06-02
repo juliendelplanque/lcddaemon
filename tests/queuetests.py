@@ -31,6 +31,12 @@ class MessageQueueTest(unittest.TestCase):
         q.put(Message('this message will be poped!', 'sender', 5, 1, 10, {}))
         self.assertEquals(q.pop().contents, 'this message will be poped!')
 
+    def test_pop_repeat(self):
+        q = MessageQueue(2)
+        q.put(Message('contents', 'sender', 5, 3, 10, {}))
+        for i in range(3):
+            self.assertEquals(q.pop().contents, 'contents')
+
     def test_user_reached_limit(self):
         q = MessageQueue(2)
         q.put(Message('contents', 'sender', 5, 1, 10, {}))
