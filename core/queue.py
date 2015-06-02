@@ -18,15 +18,36 @@ class User(object):
         self.message_count = 0
         self.lock = Lock()
 
-    def decrement(self):
+    def do_atomic(self, function):
+        """ Execute the function given using the user's lock.
+
+        Keyword Arguments:
+            function - The function that has to be done with the semaphore
+                       locked.
+        """
         self.lock.acquire()
-        self.message_count -= 1
+        function()
         self.lock.release()
 
+    def decrement(self):
+        """ Decrement the message count atomically.
+        """
+        self.do_atomic(self.decrement_non_atomic)
+
+    def decrement_non_atomic(self):
+        """ Decrement the message count non atomically.
+        """
+        self.message_count -= 1
+
     def increment(self):
-        self.lock.acquire()
+        """ Increment the message count atomically.
+        """
+        self.do_atomic(self.increment_non_atomic)
+
+    def increment_non_atomic(self):
+        """ Increment the message count non atomically.
+        """
         self.message_count += 1
-        self.lock.release()
 
 class MessageQueue(object):
     """ This object hold messages that will be displayed
@@ -47,10 +68,15 @@ class MessageQueue(object):
         while m.is_outdated():
             self.users[m.sender].decrement()
             m = self.queue.get()
-        self.users[m.sender].decrement()
-        if m.repeat > 1:
-            m.repeat -= 1
-            self.put(m)
+        # This has to be done atomically using the semaphore of the message's owner
+        def todo_atomic():
+            if m.repeat > 1:
+                m.repeat -= 1
+                self.queue.put(m)
+                print("Message reput in the queue - "+str(m.added_date))
+            else:
+                self.users[m.sender].decrement_non_atomic()
+        self.users[m.sender].do_atomic(todo_atomic)
         return m
 
     def put(self, message):
