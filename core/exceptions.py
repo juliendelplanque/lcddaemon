@@ -9,6 +9,9 @@ BAD_PARAMETER_VALUE = 102
 # Spamming error
 TOO_MUCH_MESSAGES   = 201
 
+# Missing parameter error
+MISSING_PARAMETER   = 301
+
 class LCDException(Exception):
     """ This is the abstract exception from which all exceptions created for
         this app should inherit.
