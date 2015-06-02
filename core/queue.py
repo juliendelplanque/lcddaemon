@@ -3,11 +3,30 @@
     messages to be displayed by a LCD screen.
 """
 
+from threading import Lock
 from queue import Queue
 
 import core.exceptions as exceptions  # for error codes constants
 from core.exceptions import UserException
 
+class User(object):
+    """ This object old the number of messages a user has in the queue
+        and a semaphore to assure atomicity when decrementing the number
+        of messages.
+    """
+    def __init__(self):
+        self.message_count = 0
+        self.lock = Lock()
+
+    def decrement(self):
+        self.lock.acquire()
+        self.message_count -= 1
+        self.lock.release()
+
+    def increment(self):
+        self.lock.acquire()
+        self.message_count += 1
+        self.lock.release()
 
 class MessageQueue(object):
     """ This object hold messages that will be displayed
@@ -26,9 +45,9 @@ class MessageQueue(object):
         """
         m = self.queue.get()
         while m.is_outdated():
-            users[m.sender] -= 1
+            self.users[m.sender].decrement()
             m = self.queue.get()
-        self.users[m.sender] -= 1
+        self.users[m.sender].decrement()
         if m.repeat > 1:
             m.repeat -= 1
             self.put(m)
@@ -44,9 +63,9 @@ class MessageQueue(object):
         self.queue.put(message)
         message.set_added_date_now()
         if message.sender not in self.users:
-            self.users[message.sender] = 0
+            self.users[message.sender] = User()
 
-        self.users[message.sender] += 1
+        self.users[message.sender].increment()
         print("Message added in the queue - "+str(message.added_date))
 
     def user_reached_limit(self, username):
@@ -54,7 +73,7 @@ class MessageQueue(object):
             messages limit or not.
         """
         if username in self.users:
-            return self.users[username] >= self.limit_per_user
+            return self.users[username].message_count >= self.limit_per_user
         else:
             return False
 

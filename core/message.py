@@ -93,6 +93,34 @@ class Message(object):
     def is_outdated(self):
         return datetime.now() > self.added_date + timedelta(seconds=self.ttl)
 
+def check_type(variable, typeExpected, keyName):
+    """ Check that the type of the variable match with the expected type.
+        If not, raise a ParametersException with BAD_PARAMETER_TYPE code.
+        Else, do nothing.
+
+    Keyword Arguments:
+        variable     - The variable to check.
+        typeExpected - The type expected.
+        keyName      - A string used to build the message of the exception.
+    """
+    if(type(variable) != typeExpected):
+        raise ParametersException("'"+keyName+ \
+                                  "'' is not a "+str(typeExpected)+".",
+                                  exceptions.BAD_PARAMETER_TYPE)
+
+def check_is_positive(variable, keyName):
+    """ Check that the variable is > 0.
+        If not, raise a ParametersException with BAD_PARAMETER_VALUE code.
+        Else, do nothing.
+
+    Keyword Arguments:
+        variable - The variable to check.
+        keyName  - A string used to build the message of the exception.
+    """
+    if variable <= 0:
+        raise ParametersException("'"+keyName+"' must be > 0.",
+                                  exceptions.BAD_PARAMETER_VALUE)
+
 def create_message_from_dict(dictionnary):
     """ Create a Message object from a dictionnary given in parameters.
         Typically, this dictionnary comes from a JSON.
@@ -102,51 +130,29 @@ def create_message_from_dict(dictionnary):
                       'sender' and 'ttl' keys.
     """
     copied_dict = copy.copy(dictionnary)
-    if 'contents' not in copied_dict:
-        raise ParametersException("'contents' is not in the dictionnary.",
-                                    exceptions.MISSING_PARAMETER)
-    contents = copied_dict['contents']
-    if type(contents) != str:
-        raise ParametersException("'contents' is not a string.",
-                                    exceptions.BAD_PARAMETER_TYPE)
-    if 'sender' not in copied_dict:
-        raise ParametersException("'sender' is not in the dictionnary.",
-                                    exceptions.MISSING_PARAMETER)
-    sender = copied_dict['sender']
-    if type(sender) != str:
-        raise ParametersException("'sender' is not a string.",
-                                    exceptions.BAD_PARAMETER_TYPE)
-    ttl = DEFAULT_TTL
-    if 'ttl' in copied_dict:
-        ttl = copied_dict['ttl']
-        if type(ttl) != int:
-            raise ParametersException("'ttl' is not an integer.",
-                                        exceptions.BAD_PARAMETER_TYPE)
-        if ttl <= 0:
-            raise ParametersException("'ttl' must be > 0.",
-                                        exceptions.BAD_PARAMETER_VALUE)
-        del(copied_dict['ttl'])
-    repeat = DEFAULT_REPEAT
-    if 'repeat' in copied_dict:
-        repeat = copied_dict['repeat']
-        if type(repeat) != int:
-            raise ParametersException("'repeat' is not an integer.",
-                                    exceptions.BAD_PARAMETER_TYPE)
-        if repeat <= 0:
-            raise ParametersException("'repeat' must be > 0.",
-                                    exceptions.BAD_PARAMETER_VALUE)
-        del(copied_dict['repeat'])
-    duration = DEFAULT_DURATION
-    if 'duration' in copied_dict:
-        duration = copied_dict['duration']
-        if type(duration) != int:
-            raise ParametersException("'duration' is not an integer.",
-                                    exceptions.BAD_PARAMETER_TYPE)
-        if duration <= 0:
-            raise ParametersException("'duration' must be > 0.",
-                                    exceptions.BAD_PARAMETER_VALUE)
-        del(copied_dict['duration'])
-    del(copied_dict['contents'])
-    del(copied_dict['sender'])
-    return Message(contents=contents, sender=sender, ttl=ttl,
-                    repeat=repeat, duration=duration, other_params=copied_dict)
+    # Manage contents and sender.
+    for key in ('contents', 'sender'):
+        if key not in copied_dict:
+            raise ParametersException("'"+key+"' is not in the dictionnary.",
+                                        exceptions.MISSING_PARAMETER)
+        check_type(copied_dict[key], str, key)
+    default_values_dict = {'ttl':DEFAULT_TTL,
+                           'duration': DEFAULT_DURATION,
+                           'repeat': DEFAULT_REPEAT}
+    # Managed ttl, duration and repeat.
+    for key in ('ttl', 'repeat', 'duration'):
+        value = default_values_dict[key]
+        if key in copied_dict:
+            value = copied_dict[key]
+            check_type(value, int, key)
+            check_is_positive(value, key)
+        copied_dict[key] = value
+    m = Message(copied_dict['contents'], copied_dict['sender'],
+                copied_dict['ttl'], copied_dict['repeat'],
+                copied_dict['duration'], {})
+    # Remove managed params from the dict to create other_params.
+    other_params = copied_dict
+    for key in ('contents', 'sender', 'ttl', 'duration', 'repeat'):
+        del(copied_dict[key])
+    m.other_params = copied_dict
+    return m
