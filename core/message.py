@@ -102,10 +102,16 @@ def create_message_from_dict(dictionnary):
                       'sender' and 'ttl' keys.
     """
     copied_dict = copy.copy(dictionnary)
+    if 'contents' not in copied_dict:
+        raise ParametersException("'contents' is not in the dictionnary.",
+                                    exceptions.MISSING_PARAMETER)
     contents = copied_dict['contents']
     if type(contents) != str:
         raise ParametersException("'contents' is not a string.",
                                     exceptions.BAD_PARAMETER_TYPE)
+    if 'sender' not in copied_dict:
+        raise ParametersException("'sender' is not in the dictionnary.",
+                                    exceptions.MISSING_PARAMETER)
     sender = copied_dict['sender']
     if type(sender) != str:
         raise ParametersException("'sender' is not a string.",

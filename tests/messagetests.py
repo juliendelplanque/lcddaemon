@@ -50,7 +50,7 @@ class MessageTest(unittest.TestCase):
     def test_create_message_from_dict_no_contents(self):
         # Test with 'contents' that is not present in the dict.
         dico = {'sender': 'My app'}
-        self.assertRaises(KeyError, msg.create_message_from_dict, dico)
+        self.assertRaises(ParametersException, msg.create_message_from_dict, dico)
 
     def test_create_message_from_dict_contents_not_str(self):
         # Test with 'contents' that is not a string.
@@ -60,7 +60,7 @@ class MessageTest(unittest.TestCase):
     def test_create_message_from_dict_no_sender(self):
         # Test with 'sender' that is not present in the dict.
         dico = {'contents': 'A message.'}
-        self.assertRaises(KeyError, msg.create_message_from_dict, dico)
+        self.assertRaises(ParametersException, msg.create_message_from_dict, dico)
 
     def test_create_message_from_dict_sender_not_str(self):
         # Test with 'sender' that is not a string.
