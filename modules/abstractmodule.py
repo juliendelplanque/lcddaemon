@@ -5,7 +5,7 @@
 class AbstractModule(object):
     """ This defines the method(s) that all lcddaemon module must implement.
     """
-    def apply_actions_with(message):
+    def apply_actions_with(self, message):
         """ This method is called by the thread that pop() messages from the
             MessageQueue.
 
