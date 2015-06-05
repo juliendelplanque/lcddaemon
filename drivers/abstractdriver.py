@@ -12,6 +12,12 @@ class AbstractDriver(object):
         """
         raise NotImplementedError()
 
+    def line_size(self):
+        """ This method must return the number of character it's possible
+            to display on a line.
+        """
+        raise NotImplementedError()
+
     def write_lines(self, tuple_of_string):
         """ This method take a tuple containing strings in parameters and
             make the screen display these lines (one string by line).

@@ -9,6 +9,9 @@ class CmdDriver(AbstractDriver):
     def line_count(self):
         return 1
 
+    def line_size(self):
+        return 99
+
     def write_lines(self, tuple_of_string):
         print(tuple_of_string[0])
 
