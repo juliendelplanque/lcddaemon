@@ -10,7 +10,7 @@ class QueueManager(object):
     def __init__(self, queue, module_class, animation_class):
         self.queue = queue
         self.module = module_class()
-        self.animation = animation_class()
+        # self.animation = animation_class()
         self.keep_going = True
 
     def manage(self):
