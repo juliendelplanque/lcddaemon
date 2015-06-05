@@ -20,7 +20,7 @@ class AbstractDriver(object):
             tuple_of_string - A tuple that contains strings to be display on
                               the screen.
         """
-        if len(tuple_of_string) != self.line_count():
+        if len(tuple_of_string) > self.line_count():
             raise BadNumberOfString()
 
     def clear(self):
