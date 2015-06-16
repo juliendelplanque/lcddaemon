@@ -18,8 +18,13 @@ class QueueManager(object):
         """
         while self.keep_going:
             message = self.queue.pop()
-            self.module.apply_actions_with(message)
-            self.animation.animate(message)
+            try:
+                self.module.apply_actions_with(message)
+                self.animation.animate(message)
+            except Exception as e:
+                print("An exception occurs while managing the message: "+str(message))
+                print("Here are some details:")
+                print(str(e))
 
     def stop(self):
         """ Stop the loop that pop messages at next iteration.
