@@ -7,6 +7,7 @@ import sys
 import threading
 
 from core.daemonargs import parse_arguments
+from core.message import Message
 from core.message import set_default_repeat
 from core.message import set_default_ttl
 from core.message import set_default_duration
@@ -38,7 +39,16 @@ def main():
     message_manager_thread.daemon = True
     message_manager_thread.start()
     # Start the web server.
-    run(message_queue, config["ptl"])
+    webserver_thread = threading.Thread(target=run, args=(message_queue, config["ptl"]))
+    webserver_thread.daemon = True
+    webserver_thread.start()
+    # Advertise user that everything is working:
+    # In cmd.
+    print("Daemon ready!")
+    # On the screen.
+    started_message = Message("Daemon ready!", "lcd_daemon", 1, 1, 5, {})
+    message_queue.put(started_message, verbose=False)
+    webserver_thread.join()
 
 if __name__ == '__main__':
     try:
