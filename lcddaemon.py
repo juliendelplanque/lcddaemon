@@ -18,7 +18,10 @@ from core.loader import load_driver_from_conf
 from core.loader import load_animation_from_conf
 from server.server import run
 
+driver = None
+
 def main():
+    global driver
     # Parse args from cmd.
     config = parse_arguments()
     # Set default values.
@@ -53,6 +56,11 @@ def main():
 if __name__ == '__main__':
     try:
         main()
-    except KeyboardInterrupt:
-        print("You killed me.")
+    except:
+        # Advertise user that the daemon is stopped:
+        # In cmd.
+        print("Daemon stopped!")
+        # On the screen.
+        driver.clear()
+        driver.write_lines(("Daemon stopped!",))
         sys.exit(0)
