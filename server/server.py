@@ -6,6 +6,7 @@
 import json
 from http.server import BaseHTTPRequestHandler
 from http.server import HTTPServer
+from socketserver import ThreadingMixIn
 
 from core.message import *
 from core.exceptions import LCDException
@@ -43,7 +44,10 @@ class MessageHandler(BaseHTTPRequestHandler):
     def ok_response(self):
         return self.response(0, "Message put in the queue.")
 
-def run(queue, port, server_class=HTTPServer, handler_class=MessageHandler):
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    """Handle requests in a separate thread."""
+
+def run(queue, port, server_class=ThreadedHTTPServer, handler_class=MessageHandler):
     """ Create an http server using parameters given and make it serve forever.
 
     Keyword Arguments:
