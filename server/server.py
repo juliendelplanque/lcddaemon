@@ -4,38 +4,29 @@
 """
 
 import json
-from http.server import BaseHTTPRequestHandler
-from http.server import HTTPServer
-from socketserver import ThreadingMixIn
+import socketserver
 
 from core.message import *
 from core.exceptions import LCDException
 
 message_queue = None
+instance = None
 
-
-class MessageHandler(BaseHTTPRequestHandler):
+class MessageHandler(socketserver.StreamRequestHandler):
     """ This object is the handler for messages.
         Messages are encoded as json.
     """
-    def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length)
-        message_dict = json.loads(str(post_data, 'UTF-8'))
+    def handle(self):
+        json_str = str(self.rfile.readline(), 'UTF-8')
+        message_dict = json.loads(json_str)
         print("JSON received: "+str(message_dict))
         try:
             m = create_message_from_dict(message_dict)
             print("Message created: "+str(m))
             message_queue.put(m)
             print(str(message_queue))
-            self.send_response(200)
-            self.send_header("Content-type", "text/json")
-            self.end_headers()
             self.wfile.write(bytes(self.ok_response(), 'UTF-8'))
         except LCDException as paramsException:
-            self.send_response(200)
-            self.send_header("Content-type", "text/json")
-            self.end_headers()
             self.wfile.write(bytes(self.response(paramsException.code, paramsException.cause), 'UTF-8'))
 
     def response(self, code, message):
@@ -44,11 +35,8 @@ class MessageHandler(BaseHTTPRequestHandler):
     def ok_response(self):
         return self.response(0, "Message put in the queue.")
 
-class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-    """Handle requests in a separate thread."""
-
-def run(queue, port, server_class=ThreadedHTTPServer, handler_class=MessageHandler):
-    """ Create an http server using parameters given and make it serve forever.
+def run(queue, port, server_class=socketserver.TCPServer, handler_class=MessageHandler):
+    """ Create a server using parameters given and make it serve forever.
 
     Keyword Arguments:
         queue         - An instance of a queue to use to hold messages.
@@ -57,7 +45,14 @@ def run(queue, port, server_class=ThreadedHTTPServer, handler_class=MessageHandl
         handler_class - The handler that the server has to use.
     """
     global message_queue
+    global instance
     message_queue = queue
     server_address = ('', port)
-    httpd = server_class(server_address, handler_class)
-    httpd.serve_forever()
+    instance = server_class(server_address, handler_class)
+    instance.serve_forever()
+
+def shutdown():
+    """ Stop the server.
+    """
+    global instance
+    instance.shutdown()

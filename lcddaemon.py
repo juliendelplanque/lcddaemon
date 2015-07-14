@@ -17,6 +17,7 @@ from core.loader import load_module_from_conf
 from core.loader import load_driver_from_conf
 from core.loader import load_animation_from_conf
 from server.server import run
+from server.server import shutdown
 
 driver = None
 
@@ -57,6 +58,13 @@ if __name__ == '__main__':
     try:
         main()
     except:
+        # Shutdown the server and advertise the user.
+        # In cmd.
+        print("Shutting down...")
+        # On the screen.
+        driver.clear()
+        driver.write_lines(("Shutting down...",))
+        shutdown()
         # Advertise user that the daemon is stopped:
         # In cmd.
         print("Daemon stopped!")
