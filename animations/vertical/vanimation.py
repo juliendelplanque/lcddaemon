@@ -30,7 +30,11 @@ class TopToBottomAnimation(VerticalAnimation):
             self.driver.write_lines(strings_to_display)
             time.sleep(time_per_frame)
 
-class BottomToTopAnimation(TopToBottomAnimation):
+class BottomToTopAnimation(VerticalAnimation):
     def display(self, message, strings):
-        strings.reverse()
-        super().display(message, strings)
+        time_per_frame = message.duration/len(strings)
+        for i in range(len(strings)-1):
+            strings_to_display = strings[len(strings)-i-self.driver.line_count():len(strings)-i]
+            self.driver.clear()
+            self.driver.write_lines(strings_to_display)
+            time.sleep(time_per_frame)
