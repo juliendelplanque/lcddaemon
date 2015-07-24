@@ -60,9 +60,12 @@ class MessageQueue(object):
         # number of messages in the queue for the user.
         self.users = {}
 
-    def pop(self):
+    def pop(self, verbose=True):
         """ Pop the first message from the queue.
             This operation is thread-safe.
+
+        Keyword Arguments:
+            verbose - True if logs have to be created, else false.
         """
         m = self.queue.get()
         while m.is_outdated():
@@ -73,15 +76,20 @@ class MessageQueue(object):
             if m.repeat > 1:
                 m.repeat -= 1
                 self.queue.put(m)
-                print("Message reput in the queue - "+str(m.added_date))
+                if verbose:
+                    print("Message reput in the queue - "+str(m.added_date))
             else:
                 self.users[m.sender].decrement_non_atomic()
         self.users[m.sender].do_atomic(todo_atomic)
         return m
 
-    def put(self, message):
+    def put(self, message, verbose=True):
         """ Put a message at the end of the queue.
             This operation is thread-safe.
+
+        Keyword Arguments:
+            message - The message to put in the queue.
+            verbose - True if logs have to be created, else false.
         """
         if self.user_reached_limit(message.sender):
             raise UserException("You have too much messages waiting in the queue.",
@@ -92,7 +100,8 @@ class MessageQueue(object):
             self.users[message.sender] = User()
 
         self.users[message.sender].increment()
-        print("Message added in the queue - "+str(message.added_date))
+        if verbose:
+            print("Message added in the queue - "+str(message.added_date))
 
     def user_reached_limit(self, username):
         """ Check if the user that the name is given in parameter reached its
