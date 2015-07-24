@@ -24,6 +24,7 @@ class QueueManager(object):
             except Exception as e:
                 print("An exception occurs while managing the message: "+str(message))
                 print("Here are some details:")
+                print("Exception type: "+str(type(e)))
                 print(str(e))
 
     def stop(self):
