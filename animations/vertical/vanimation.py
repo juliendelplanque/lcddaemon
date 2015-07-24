@@ -34,7 +34,7 @@ class BottomToTopAnimation(VerticalAnimation):
     def display(self, message, strings):
         time_per_frame = message.duration/len(strings)
         for i in range(len(strings)-1):
-            strings_to_display = strings[len(strings)-i-self.driver.line_count():len(strings)-i]
+            strings_to_display = strings[len(strings)-i-self.driver.line_count()-1:len(strings)-i]
             self.driver.clear()
             self.driver.write_lines(strings_to_display)
             time.sleep(time_per_frame)
