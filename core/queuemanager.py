@@ -19,7 +19,7 @@ class QueueManager(object):
         while self.keep_going:
             message = self.queue.pop()
             try:
-                self.module.apply_actions_with(message)
+                self.module.apply_actions_to(message)
                 self.animation.animate(message)
             except Exception as e:
                 print("An exception occurs while managing the message: "+str(message))
