@@ -12,3 +12,8 @@ class Default(AbstractModule):
         """ Do nothing.
         """
         pass
+
+    def apply_post_actions_to(self, message):
+        """ Do nothing.
+        """
+        pass
