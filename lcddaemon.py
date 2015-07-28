@@ -57,7 +57,7 @@ def main():
 if __name__ == '__main__':
     try:
         main()
-    except:
+    except Exception as e:
         # Shutdown the server and advertise the user.
         # In cmd.
         print("Shutting down...")
