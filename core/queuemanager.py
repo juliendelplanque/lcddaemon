@@ -4,6 +4,9 @@
     pass the message to the object responsable of the animation.
 """
 
+import sys
+import os
+
 class QueueManager(object):
     """ Manage the MessageQueue.
     """
@@ -25,8 +28,12 @@ class QueueManager(object):
             except Exception as e:
                 print("An exception occurs while managing the message: "+str(message))
                 print("Here are some details:")
-                print("Exception type: "+str(type(e)))
-                print(str(e))
+                # Print informations about the exception.
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                file_name = exc_tb.tb_frame.f_code.co_filename
+                print("- Exception type: "+e.__class__.__name__)
+                print("- File name: "+file_name)
+                print("- Line no: "+str(exc_tb.tb_lineno))
 
     def stop(self):
         """ Stop the loop that pop messages at next iteration.

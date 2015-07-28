@@ -55,4 +55,5 @@ def shutdown():
     """ Stop the server.
     """
     global instance
-    instance.shutdown()
+    if instance != None: # Shutdown only if the server has been created.
+        instance.shutdown()

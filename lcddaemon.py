@@ -58,17 +58,27 @@ if __name__ == '__main__':
     try:
         main()
     except Exception as e:
+        print("An exception occurs, here are some details:")
+        # Print informations about the exception.
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        file_name = exc_tb.tb_frame.f_code.co_filename
+        print("- Exception type: "+e.__class__.__name__)
+        print("- File name: "+file_name)
+        print("- Line no: "+str(exc_tb.tb_lineno))
+    finally:
         # Shutdown the server and advertise the user.
         # In cmd.
         print("Shutting down...")
         # On the screen.
-        driver.clear()
-        driver.write_lines(("Shutting down...",))
+        if driver != None:
+            driver.clear()
+            driver.write_lines(("Shutting down...",))
         shutdown()
         # Advertise user that the daemon is stopped:
         # In cmd.
         print("Daemon stopped!")
         # On the screen.
-        driver.clear()
-        driver.write_lines(("Daemon stopped!",))
+        if driver != None:
+            driver.clear()
+            driver.write_lines(("Daemon stopped!",))
         sys.exit(0)
