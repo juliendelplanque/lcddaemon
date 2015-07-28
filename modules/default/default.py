@@ -8,7 +8,7 @@ from modules.abstractmodule import AbstractModule
 class Default(AbstractModule):
     """ This module does absolutely nothing.
     """
-    def apply_actions_with(self, message):
+    def apply_actions_to(self, message):
         """ Do nothing.
         """
         pass
