@@ -13,3 +13,8 @@ class Printer(AbstractModule):
         """ Simply print the message's contents with my name before.
         """
         print("Printer: "+message.contents)
+
+    def apply_post_actions_to(self, message):
+        """ Simply print the message's contents with my name before.
+        """
+        print("Printer (post-print): "+message.contents)

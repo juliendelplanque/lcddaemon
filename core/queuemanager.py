@@ -21,6 +21,7 @@ class QueueManager(object):
             try:
                 self.module.apply_actions_to(message)
                 self.animation.animate(message)
+                self.module.apply_post_actions_to(message)
             except Exception as e:
                 print("An exception occurs while managing the message: "+str(message))
                 print("Here are some details:")
