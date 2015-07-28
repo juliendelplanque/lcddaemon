@@ -70,7 +70,7 @@ if __name__ == '__main__':
         # In cmd.
         print("Shutting down...")
         # On the screen.
-        if driver != None:
+        if driver != None: # Only do it if the screen has been used already.
             driver.clear()
             driver.write_lines(("Shutting down...",))
         shutdown()
@@ -78,7 +78,7 @@ if __name__ == '__main__':
         # In cmd.
         print("Daemon stopped!")
         # On the screen.
-        if driver != None:
+        if driver != None: # Only do it if the screen has been used already.
             driver.clear()
             driver.write_lines(("Daemon stopped!",))
         sys.exit(0)
