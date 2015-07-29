@@ -9,7 +9,12 @@ class Printer(AbstractModule):
     """ A module that print the contents of a message when apply_actions_with
         method is called.
     """
-    def apply_actions_with(self, message):
+    def apply_actions_to(self, message):
         """ Simply print the message's contents with my name before.
         """
         print("Printer: "+message.contents)
+
+    def apply_post_actions_to(self, message):
+        """ Simply print the message's contents with my name before.
+        """
+        print("Printer (post-print): "+message.contents)
