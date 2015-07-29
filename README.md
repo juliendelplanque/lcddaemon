@@ -16,3 +16,4 @@ be available soon.
 ## Available clients
 
 - [Pharo](https://github.com/juliendelplanque/pharolcd)
+- [Python](https://github.com/juliendelplanque/pythonlcd)
