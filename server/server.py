@@ -19,15 +19,18 @@ class MessageHandler(socketserver.StreamRequestHandler):
     def handle(self):
         json_str = str(self.rfile.readline(), 'UTF-8')
         message_dict = json.loads(json_str)
-        print("JSON received: "+str(message_dict))
         try:
             m = create_message_from_dict(message_dict)
             print("Message created: "+str(m))
             message_queue.put(m)
-            print(str(message_queue))
             self.wfile.write(bytes(self.ok_response(), 'UTF-8'))
         except LCDException as paramsException:
-            self.wfile.write(bytes(self.response(paramsException.code, paramsException.cause), 'UTF-8'))
+            print("An exception occurs while managing "+
+                    str(self.client_address[0])+":")
+            print("- Code: "+str(paramsException.code))
+            print("- Cause: "+paramsException.cause)
+            self.wfile.write(bytes(self.response(paramsException.code,
+                                            paramsException.cause), 'UTF-8'))
 
     def response(self, code, message):
         return json.dumps({'code': code, 'message': message})
