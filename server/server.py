@@ -12,7 +12,7 @@ from core.exceptions import LCDException
 message_queue = None
 instance = None
 
-class MessageHandler(socketserver.StreamRequestHandler):
+class TCPMessageHandler(socketserver.StreamRequestHandler):
     """ This object is the handler for messages.
         Messages are encoded as json.
     """
@@ -38,7 +38,7 @@ class MessageHandler(socketserver.StreamRequestHandler):
     def ok_response(self):
         return self.response(0, "Message put in the queue.")
 
-def run(queue, port, server_class=socketserver.TCPServer, handler_class=MessageHandler):
+def run(queue, port, server_class=socketserver.TCPServer, handler_class=TCPMessageHandler):
     """ Create a server using parameters given and make it serve forever.
 
     Keyword Arguments:
